@@ -18,8 +18,6 @@ The following technologies were used to build the Garage App:
 * SQLite: The database management system used to store the data locally on the device.
 
 ## Note:
-    I choose SQL becasue SQLite is a popular choice for storing structured data locally on an Android device because it is lightweight, efficient, and provides a flexible SQL-based interface for organizing and querying data. It is optimized for small to medium-sized databases and can handle complex queries and transactions.
-
-Room is an abstraction layer built on top of SQLite that provides a more convenient and type-safe way to work with databases in Android. It provides compile-time verification of SQL queries, a simplified data access API, and support for LiveData and RxJava for reactive programming. Room is suitable for larger, more complex databases or applications where compile-time safety is preferred.
-
-Shared Preferences, on the other hand, are used to store small amounts of data in key-value pairs, typically for storing user preferences or application settings. Shared Preferences are not suitable for storing large amounts of structured data.
+* I choose SQL becasue SQLite is a popular choice for storing structured data locally on an Android device because it is lightweight, efficient, and provides a flexible SQL-based interface for organizing and querying data. It is optimized for small to medium-sized databases and can handle complex queries and transactions.
+* Whereas Room is an abstraction layer built on top of SQLite that provides a more convenient and type-safe way to work with databases in Android. It provides compile-time verification of SQL queries, a simplified data access API, and support for LiveData and RxJava for reactive programming. Room is suitable for larger, more complex databases or applications where compile-time safety is preferred.
+* Shared Preferences, on the other hand, are used to store small amounts of data in key-value pairs, typically for storing user preferences or application settings. Shared Preferences are not suitable for storing large amounts of structured data.
