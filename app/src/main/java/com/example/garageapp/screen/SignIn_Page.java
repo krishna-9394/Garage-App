@@ -1,9 +1,12 @@
 package com.example.garageapp.screen;
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -60,24 +63,22 @@ public class SignIn_Page extends AppCompatActivity {
     }  // initializing signUp link, forgotPassword and submit button
     private void Login() {
         loading(true);
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent);
+        String _email = email.getText().toString().trim();
+        String _password = password.getText().toString().trim();
+        Log.i(TAG, "Login: "+_email+" "+_password);
+        if(loginDB.checkusernamepassword(_email,_password)){
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+            showToast("LoginSuccessful");
+            loading(false);
+            return;
+        } else {
+            showToast("Step 4");
+        }
+        loading(false);
+//        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+//        startActivity(intent);
         return;
-//        showToast("Step 1");
-//        String _email = email.getText().toString().trim();
-//        String _password = password.getText().toString().trim();
-//        showToast("Step 2");
-//        if(loginDB.checkusernamepassword(_email,_password)){
-//            showToast("Step 3");
-////            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-////            startActivity(intent);
-//            showToast("LoginSuccessful");
-//            loading(false);
-//            return;
-//        } else {
-//            showToast("Step 4");
-//        }
-//        loading(false);
     }  //checked it again
     private void loading(boolean isLoading) {
         if(isLoading) {

@@ -1,17 +1,13 @@
 package com.example.garageapp;
 
-import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
-
 import static com.example.garageapp.database.Database.cars;
 
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -37,14 +33,13 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     private Spinner spinner, spinner2;
-    private ArrayList<String> makesList = new ArrayList<>();
+    private ArrayList<String> makeList = new ArrayList<>();
+    private ArrayList<String> modelList = new ArrayList<>();
     private ArrayList<Integer> makeIdsList = new ArrayList<>();
-    private ArrayList<Integer> modelsList = new ArrayList<>();
-    private ArrayAdapter<String> modelAdapter;
-    private Button btn,logout;
-    private String makeText;
-    private String modelText;
 
+    private ArrayAdapter<String> modelAdapter, makeAdapter;
+    private Button btn,logout;
+    private String makeText, modelText;
     private ListView listView;
     private MyAdapter myAdapter;
 
@@ -59,11 +54,18 @@ public class MainActivity extends AppCompatActivity {
         listView = findViewById(R.id.listview);
         logout = findViewById(R.id.log);
 
-        ArrayList modelList = new ArrayList<>();
-        modelAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_item, modelList);
+        ArrayList<String> modelsList = new ArrayList<>();
+        modelsList.add("SELECT MODEL");
+        ArrayList<String> makesList = new ArrayList<>();
+        makesList.add("SELECT MAKE");
+        modelAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_item, modelsList);
+        makeAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_item, makesList);
         modelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        makeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(makeAdapter);
         spinner2.setAdapter(modelAdapter);
         new FetchMakesTask().execute();
+
         myAdapter = new MyAdapter(this,cars);
         listView.setAdapter(myAdapter);
         logout.setOnClickListener(new View.OnClickListener() {
@@ -77,11 +79,10 @@ public class MainActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cars.add(new Cars(makeText,modelText,1,1,null));
+                Database.cars.add(new Cars(makeText,modelText,1,1,null));
                 myAdapter.notifyDataSetChanged();
             }
         });
-
     }
 
     private class FetchMakesTask extends AsyncTask<Void, Void, String> {
@@ -122,7 +123,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-
             try {
                 JSONObject jsonObject = new JSONObject(s);
                 JSONArray jsonArray = jsonObject.getJSONArray("Results");
@@ -131,11 +131,10 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject makeObject = jsonArray.getJSONObject(i);
                     String makeName = makeObject.getString("MakeName");
                     Integer makeId = Integer.parseInt(makeObject.getString("MakeId"));
-                    makesList.add(makeName);
+                    makeList.add(makeName);
                     makeIdsList.add(makeId);
                 }
-
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_item, makesList);
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_item, makeList);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinner.setAdapter(adapter);
 
@@ -174,8 +173,6 @@ public class MainActivity extends AppCompatActivity {
     private class FetchModelTask extends AsyncTask<Void, Void, String> {
 
         private final String API_URL = "https://vpic.nhtsa.dot.gov/api/vehicles/getmodelsformakeid/";
-
-        private ArrayList<String> modelList = new ArrayList<>();
         private String makeId;
 
         public FetchModelTask(String makeId) {

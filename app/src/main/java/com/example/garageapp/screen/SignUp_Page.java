@@ -51,19 +51,10 @@ public class SignUp_Page extends AppCompatActivity {
     private byte[] imageByte;
 
     private LoginDBHandler db;
-//    private FirebaseDatabase loginDB;
-//    private FirebaseStorage storage;
-//    private StorageReference ref;
-//    private PreferenceManager preferenceManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up_page);
-//        preferenceManager=new PreferenceManager(getApplicationContext());
-//        loginDB = FirebaseDatabase.getInstance();
-//        storage = FirebaseStorage.getInstance();
-
-        // initialising the view Items
         initializing();
         Listener();
     }
@@ -78,7 +69,7 @@ public class SignUp_Page extends AppCompatActivity {
         progressBar = findViewById(R.id.progress_bar);
         addImage = (FloatingActionButton) findViewById(R.id.add_image);
         userProfile = (RoundedImageView) findViewById(R.id.signUp_logo);
-        db = new LoginDBHandler(this);
+        db = new LoginDBHandler(SignUp_Page.this);
 
     }  // initialization the views
     public void showToast(String message){
@@ -135,41 +126,7 @@ public class SignUp_Page extends AppCompatActivity {
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 25 , stream);
                 imageByte = stream.toByteArray();
-                // we have to upload image to SQLite  and it is in Byte[] form
-//                ref = storage.getReference().child("images/").child(path);
-                // adding listeners on upload
-                // or failure of image
-
-//                ref.putBytes(imageByte)
-//                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                            @Override
-//                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                                ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                                    @Override
-//                                    public void onSuccess(Uri uri) {
-//                                        url = uri.toString();
-//                                        preferenceManager.putString(Constants.KEY_IMAGE_URL,url);
-//                                        Log.v("message", url);
-//                                        progressDialog.dismiss();
-//
-//                                    }
-//                                });
-//                            }
-//                        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-//                            @Override
-//                            public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-//                                double progress = (100.0 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
-//                                progressDialog.setMessage("Uploaded " + (int) progress + "%");
-//                                progressBar.setVisibility(View.VISIBLE);
-//                            }
-//                        }).addOnFailureListener(new OnFailureListener() {
-//                            @Override
-//                            public void onFailure(@NonNull Exception e) {
-//                                progressBar.setVisibility(View.INVISIBLE);
-//                                showToast("Uploading Failed !!");
-//                            }
-//                        });;
-            } catch (IOException e) {
+                } catch (IOException e) {
                 Log.v("message","compressing failed...");
                 e.printStackTrace();
             }
@@ -182,13 +139,14 @@ public class SignUp_Page extends AppCompatActivity {
     }  //function to get the file extensions
     private void SignUp() {
         loading(true);
-        User user = new User(email.getText().toString().trim(), url, name.getText().toString().trim(), password.getText().toString().trim());
-        if(db.checkusername(user.getName())) {
+        User user = new User(email.getText().toString().trim(), imageByte, name.getText().toString().trim(), password.getText().toString().trim());
+        if(db.checkusername(user.getEmail())) {
             showToast("User already exists!");
             return;
         }
-        db.addNewUser(user.getName(),user.getPassword(),user.getImage_url());
-        showToast("SignUp Successful");
+        long id = db.addNewUser(user.getEmail(),user.getPassword(),user.getImage_url());
+
+        showToast("SignUp Successful "+ id);
         Intent intent = new Intent(SignUp_Page.this, MainActivity.class);
         startActivity(intent);
         loading(false);

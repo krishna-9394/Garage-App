@@ -2,13 +2,13 @@ package com.example.garageapp.utility;
 
 public class User {
     private String name;
-    private String image_url;
+    private byte[] image_url;
     private String email;
     private String password;
     public User() {
     }
 
-    public User( String email, String image_url, String name, String password) {
+    public User( String email, byte[] image_url, String name, String password) {
         this.name = name;
         this.image_url = image_url;
         this.email = email;
@@ -23,11 +23,11 @@ public class User {
         this.name = name;
     }
 
-    public String getImage_url() {
+    public byte[] getImage_url() {
         return image_url;
     }
 
-    public void setImage_url(String image_url) {
+    public void setImage_url(byte[] image_url) {
         this.image_url = image_url;
     }
 

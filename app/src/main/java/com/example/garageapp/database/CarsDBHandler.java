@@ -20,11 +20,7 @@ public class CarsDBHandler extends SQLiteOpenHelper {
     private static final String TABLE_NAME = "cars";
 
     // below variable is for our id column.
-    private static final String MAKE_ID = "make_id";
-
     private static final String MAKE_NAME = "make_name";
-
-    private static final String MODEL_ID = "model_id";
     private static final String MODEL_NAME = "model_name";
     private static final String CAR_IMAGE = "car_image";
 
@@ -36,28 +32,25 @@ public class CarsDBHandler extends SQLiteOpenHelper {
     // below method is for creating a database by running a sqlite query
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String query = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " ("
-                + MAKE_ID+ " INTEGER PRIMARY KEY, "
-                + MAKE_NAME + " TEXT,"
-                + MODEL_ID + " INTEGER,"
+        String query = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "("
+                + MAKE_NAME + " TEXT PRIMARY KEY, "
                 + CAR_IMAGE + " TEXT, "
-                + MODEL_NAME + " TEXT)";
+                + MODEL_NAME + " TEXT);";
         db.execSQL(query);
     }
 
     // this method is use to add new car to our sqlite database.
-    public void addNewCar(String ModelName,String MakeName,int ModelId,int MakeId) {
+    public void addNewCar(String ModelName,String MakeName) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(MAKE_ID, MakeId);
         values.put(MAKE_NAME, MakeName);
-        values.put(MODEL_ID, ModelId);
         values.put(MODEL_NAME, ModelName);
+        values.put(CAR_IMAGE,"null");
         db.insert(TABLE_NAME, null, values);
         db.close();
     }
 
-    public ArrayList<Cars> readCourses() {
+    public ArrayList<Cars> readCarsList() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursorCourses = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
         ArrayList<Cars> CarsList = new ArrayList<>();

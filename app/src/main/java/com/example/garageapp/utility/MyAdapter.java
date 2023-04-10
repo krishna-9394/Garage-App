@@ -1,13 +1,30 @@
 package com.example.garageapp.utility;
 
+import static android.app.Activity.RESULT_OK;
+import static androidx.core.app.ActivityCompat.startActivityForResult;
+
+import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.Nullable;
 
 import com.example.garageapp.R;
+import com.example.garageapp.screen.SignUp_Page;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.util.ArrayList;
 
